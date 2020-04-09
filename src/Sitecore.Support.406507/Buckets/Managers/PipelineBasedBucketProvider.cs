@@ -2,7 +2,6 @@
 using Sitecore.Buckets.Util;
 using Sitecore.ContentSearch.Utilities;
 using Sitecore.Data;
-using Sitecore.Data.Events;
 using Sitecore.Data.Items;
 using Sitecore.Diagnostics;
 using Sitecore.SecurityModel;
@@ -29,12 +28,9 @@ namespace Sitecore.Support.Buckets.Managers
             if ((item = database.GetItem(path)) == null)
             {
                 TemplateItem templateItem = database.Templates[new TemplateID(BucketConfigurationSettings.ContainerTemplateId)];
-                using (new EventDisabler())
+                using (new SecurityDisabler())
                 {
-                    using (new SecurityDisabler())
-                    {
-                        item = database.CreateItemPath(path, templateItem, templateItem);
-                    }
+                    item = database.CreateItemPath(path, templateItem, templateItem);
                 }
             }
             Assert.IsNotNull(item, "Cannot resolve date folder destination.");
